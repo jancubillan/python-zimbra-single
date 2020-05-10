@@ -37,3 +37,82 @@ sp.run(["systemctl", "mask", "postfix"])
 
 sp.run(["yum", "install", "-y", "bind"])
 os.rename("/etc/named.conf", "/etc/named.conf.bak")
+
+namedconf = """
+options {
+	listen-on port 53 { any; };
+	directory 	"/var/named";
+	dump-file 	"/var/named/data/cache_dump.db";
+	statistics-file "/var/named/data/named_stats.txt";
+	memstatistics-file "/var/named/data/named_mem_stats.txt";
+	recursing-file  "/var/named/data/named.recursing";
+	secroots-file   "/var/named/data/named.secroots";
+	allow-query     { any; };
+
+	recursion yes;
+
+	forward only;
+	forwarders { 8.8.8.8; 8.8.4.4; };
+
+	dnssec-enable yes;
+	dnssec-validation no;
+
+	bindkeys-file "/etc/named.root.key";
+
+	managed-keys-directory "/var/named/dynamic";
+
+	pid-file "/run/named/named.pid";
+	session-keyfile "/run/named/session.key";
+};
+
+logging {
+        channel default_debug {
+                file "data/named.run";
+                severity dynamic;
+        };
+};
+
+zone "." IN {
+	type hint;
+	file "named.ca";
+};
+
+zone "example.com" IN {
+	type master;
+	file "example.com.zone";
+	allow-update { none; };
+};
+
+zone "122.168.192.in-addr.arpa" IN {
+	type master;
+	file "example.com.revzone";
+	allow-update { none; };
+};
+
+include "/etc/named.rfc1912.zones";
+include "/etc/named.root.key";
+"""
+
+with open("/etc/named.conf", "w") as i:
+    i.write(namedconf.strip())
+
+sp.run("chown", "root.named", "/etc/named.conf")
+sp.run("chmod", "640", "/etc/named.conf")
+
+examplecomzone = """
+$TTL 1D
+@	IN SOA	example.com. (
+					; serial
+					1D	; refresh
+					1H	; retry
+					1W	; expire
+					3H )	; minimum
+	NS	@
+	A	${zimbra_ip}
+	MX	1	${zimbra_fqdn}.
+${zimbra_shortname}	A	${zimbra_ip}
+"""
+
+with open("/var/named/example.com/zone", "w") as i:
+    i.write
+
