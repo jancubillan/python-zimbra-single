@@ -2,7 +2,6 @@
 
 import subprocess as sp
 import os
-import requests
 
 zimbra_timezone = "Asia/Manila"
 zimbra_fqdn = "mail.example.com"
