@@ -1,6 +1,3 @@
-WORK IN PROGRESS
-================
-
 python-zimbra-single
 ====================
 
@@ -15,8 +12,19 @@ Requirements
 
 How to use:
 -----------
+Clone and change directory to the project folder
 
-    WORK IN PROGRESS
+    # git clone https://github.com/jancubillan/python-zimbra-single.git
+    # cd python-zimbra-single
+
+Modify the variables file then run tha main.py script
+
+    # vi vars/main.py
+    # python3 main.py
+
+Reset Administrator password:
+
+    # zmprov sp admin@example.com mypassword
 
 License
 -------
