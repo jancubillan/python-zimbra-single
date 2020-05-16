@@ -183,7 +183,8 @@ y
 with open("../zimbra_answers.txt", "w") as i:
     i.write(zimbra_answers_txt.strip())
 
-sp.run(["./install.sh", "-s", "<", "../zimbra_answers.txt"])
+input_answers = open("../zimbra_answers.txt")
+sp.run(["./install.sh", "-s"], stdin=input_answers)
 
 zimbra_config_txt = f"""
 AVDOMAIN="{zimbra_domain}"
