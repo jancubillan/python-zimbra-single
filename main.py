@@ -143,7 +143,7 @@ $TTL 1D
 {zimbra_ptr}	PTR	{zimbra_fqdn}.
 """
 
-with open(f"zimbra_revzone_path", "w") as i:
+with open(f"{zimbra_revzone_path}", "w") as i:
     i.write(example_com_revzone.strip())
 
 sp.run(["chown", "root.named", zimbra_revzone_path])
