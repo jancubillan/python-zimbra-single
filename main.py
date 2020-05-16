@@ -281,4 +281,7 @@ zimbra_require_interprocess_security="1"
 INSTALL_PACKAGES="zimbra-core zimbra-ldap zimbra-logger zimbra-mta zimbra-snmp zimbra-store zimbra-apache zimbra-spell zimbra-memcached zimbra-proxy "
 """
 
+with open("../zimbra_config.txt", "w") as i:
+    i.write(zimbra_config_txt.strip())
+
 sp.run(["/opt/zimbra/libexec/zmsetup.pl", "-c", "../zimbra_config.txt"])
