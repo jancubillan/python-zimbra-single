@@ -12,7 +12,7 @@ sp.run(["hostnamectl", "set-hostname", zimbra_fqdn])
 with open("/etc/hosts", "a") as i:
     i.write(f"{zimbra_ip} {zimbra_fqdn} {zimbra_shortname}\n")
 
-utilities = ["bash-completion", "tmux", "tmux", "telnet", "bind-utils", "tcpdump", "wget", "lsof", "rsync"]
+utilities = ["bash-completion", "tmux", "tmux", "telnet", "bind-utils", "tcpdump", "wget", "lsof", "rsync", "tar", "nmap-ncat"]
 for i in utilities:
     sp.run(["yum", "install", "-y", i])
 
@@ -24,8 +24,11 @@ for i in ports:
 
 sp.run(["firewall-cmd", "--reload"])
 
-sp.run(["systemctl", "--now", "disable", "postfix"])
-sp.run(["systemctl", "mask", "postfix"])
+check_postfix = sp.run(["rpm", "-q", "postfix"]).returncode
+
+if check_postfix == 0:
+    sp.run(["systemctl", "--now", "disable", "postfix"])
+    sp.run(["systemctl", "mask", "postfix"])
 
 sp.run(["yum", "install", "-y", "bind"])
 os.rename("/etc/named.conf", "/etc/named.conf.bak")
